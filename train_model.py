@@ -144,13 +144,12 @@ def plot_predictions(y_test, predictions):
     plt.show()
 
 
-def averaged_predictions(data, label, length=14, n_data=20, model_ann=None):
+def averaged_predictions(data, length=14, n_data=20, model_ann=None):
     """
     Compute averaged predictions using an artificial neural network.
     
     Parameters:
         data (ndarray): Input data for predictions.
-        label (ndarray): Corresponding labels.
         length (int): Length of prediction window.
         n_data (int): Number of data samples.
         model_ann (keras.Model): Trained ANN model.
