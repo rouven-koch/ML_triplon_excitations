@@ -319,23 +319,23 @@ def enhance_dIdV(dIdV, n_enhance=2, res=125, noisy=1):
 # Main script execution
 if __name__ == "__main__":
     
-    # # load and preprocess data
-    # dos_data, label_data = load_data()
-    # dos_data, label_data = preprocess_data(dos_data, label_data)
-    # dos_scaled = add_noise_and_scale(dos_data)
-    # dIdV_norm = compute_dIdV(dos_scaled, sample_size=1500)
-    # X_train, X_test, y_train, y_test = split_data(dIdV_norm, label_data)
+    # load and preprocess data
+    dos_data, label_data = load_data()
+    dos_data, label_data = preprocess_data(dos_data, label_data)
+    dos_scaled = add_noise_and_scale(dos_data)
+    dIdV_norm = compute_dIdV(dos_scaled, sample_size=1500)
+    X_train, X_test, y_train, y_test = split_data(dIdV_norm, label_data)
     
-    # # (1) build NN based on theory model
-    # model = build_ANN(X_train.shape[1], y_train.shape[1])
-    # history = train_model(model, X_train, y_train)
-    # plot_loss(history)
+    # (1) build NN based on theory model
+    model = build_ANN(X_train.shape[1], y_train.shape[1])
+    history = train_model(model, X_train, y_train)
+    plot_loss(history)
     
-    # # predictions for test data
-    # predictions = model.predict(X_test)
-    # plot_predictions(y_test, predictions)
+    # predictions for test data
+    predictions = model.predict(X_test)
+    plot_predictions(y_test, predictions)
     
-    # # save model
+    # save model
     # model.save('model_dIdV.keras')
 
 
@@ -353,6 +353,6 @@ if __name__ == "__main__":
     plot_predictions(y_test, predictions)
     
     # save model
-    model_exp.save('model_dIdV_exp.keras')
+    # model_exp.save('model_dIdV_exp.keras')
 
     
