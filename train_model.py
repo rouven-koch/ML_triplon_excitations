@@ -18,10 +18,10 @@ from tensorflow.keras.models import load_model
 # Load data
 def load_data():
     """Loads and combines DOS and label data."""
-    dos_data_1 = np.load("n12_disorder_level/data_n12_exp.npy")
-    label_data_1 = np.load("n12_disorder_level/label_n12_exp.npy")
-    dos_data_2 = np.load("n12_disorder_level/data_n12_level.npy")
-    label_data_2 = np.load("n12_disorder_level/label_n12_level.npy")
+    dos_data_1 = np.load("data_theory/data_n12_exp.npy")
+    label_data_1 = np.load("data_theory/label_n12_exp.npy")
+    dos_data_2 = np.load("data_theory/data_n12_level.npy")
+    label_data_2 = np.load("data_theory/label_n12_level.npy")
     
     dos_data = np.concatenate((dos_data_2, dos_data_1))
     label_data = np.concatenate((label_data_2, label_data_1))
