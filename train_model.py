@@ -12,6 +12,7 @@ import seaborn as sns
 from scipy.integrate import cumulative_trapezoid
 import sklearn.model_selection as sk
 from tensorflow.keras.models import load_model
+import joblib
 
 
 
@@ -28,22 +29,28 @@ def load_data():
     return dos_data, label_data
 
 def preprocess_data(dos_data, label_data, n=12, res=250, n_data=1500):
-    """Prepares and normalizes data for training."""
+    """Prepares and normalizes data for training, and saves the MinMaxScaler."""
+    # Divide into 1000 systems
     data = np.zeros((n_data, n * res))
     label = np.zeros((n_data, 2 * n - 1))
-    
+
     for i in range(n_data):
         data[i, :] = dos_data[i * n * res:(i + 1) * n * res]
         label[i, :] = label_data[(i * (2 * n - 1) + i * 2):((i + 1) * (2 * n - 1) + i * 2)]
-    
+
     # Subsampling and scaling
-    dos_data = data[:, ::2]
-    label_data = label + 0.5
-    
+    dos_data = data[:, ::2]  # Downsample DOS data
+    label_data = label + 0.5  # Adjust label data
+
+    # Rescale intermolecular exchange (Gamma)
     scaler_gamma = MinMaxScaler()
-    label_data[:, 12:] = scaler_gamma.fit_transform(label[:, 12:])
-    
+    label_data[:, 12:] = scaler_gamma.fit_transform(label[:, 12:])  # Normalize the Gamma values
+
+    # Save the scaler
+    joblib.dump(scaler_gamma, 'scaler_gamma.pkl')
+
     return dos_data, label_data
+
 
 def add_noise_and_scale(dos_data, noise_level=0.0001):
     """Adds noise to the data and normalizes it."""
@@ -316,6 +323,8 @@ def enhance_dIdV(dIdV, n_enhance=2, res=125, noisy=1):
     return dIdV_exp / np.amax(dIdV_exp) * 0.75, label_data_expanded
 
 
+
+
 # Main script execution
 if __name__ == "__main__":
     
@@ -326,17 +335,18 @@ if __name__ == "__main__":
     dIdV_norm = compute_dIdV(dos_scaled, sample_size=1500)
     X_train, X_test, y_train, y_test = split_data(dIdV_norm, label_data)
     
-    # (1) build NN based on theory model
-    model = build_ANN(X_train.shape[1], y_train.shape[1])
-    history = train_model(model, X_train, y_train)
-    plot_loss(history)
+
+    # # (1) build NN based on theory model
+    # model = build_ANN(X_train.shape[1], y_train.shape[1])
+    # history = train_model(model, X_train, y_train)
+    # plot_loss(history)
     
-    # predictions for test data
-    predictions = model.predict(X_test)
-    plot_predictions(y_test, predictions)
+    # # predictions for test data
+    # predictions = model.predict(X_test)
+    # plot_predictions(y_test, predictions)
     
-    # save model
-    # model.save('model_dIdV.keras')
+    # # save model
+    # # model.save('model_dIdV.keras')
 
 
     # (2) build NN based on theory model for realistic dIdV
@@ -353,6 +363,6 @@ if __name__ == "__main__":
     plot_predictions(y_test, predictions)
     
     # save model
-    # model_exp.save('model_dIdV_exp.keras')
+    model_exp.save('model_dIdV_exp.keras')
 
     
